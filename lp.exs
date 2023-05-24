@@ -1,4 +1,3 @@
-
 list = [1, 2, 3, 4, 5]
 list2 = [6, 2, 8, 9, 10]
 
@@ -92,31 +91,23 @@ defmodule IntersecaoLists do
 end
 IntersecaoLists.intersectionLists(list, list2)
 
-
-defmodule OrdenacaoList do
-  def partition(lista, p, r) do
-    x = lista[r]
-    i = p - 1
-    for j <- p..r - 1 do
-      if lista[j] <= x do
-        i = i + 1
-        lista = List.replace_at(lista, i, lista[j])
-        lista = List.replace_at(lista, j, lista[i])
+defmodule OrdenarLista do
+  def quickSort(lista) do
+    if lista == [] do
+      []
+    else if length(lista) == 1 do
+      lista
+    else
+      head = Enum.at(lista, 0)
+      tail = Enum.drop(lista, 1)
+      left = Enum.filter(tail, fn(x) -> x < head end)
+      right = Enum.filter(tail, fn(x) -> x >= head end)
+      ordenada = quickSort(left) ++ [head] ++ quickSort(right)
+      ordenada
       end
     end
-    lista = List.replace_at(lista, i + 1, lista[r])
-    lista = List.replace_at(lista, r, lista[i + 1])
-    i + 1
   end
-
-  def quickSort(lista, e, d) do
-    if e < d do
-      q = partition(lista, e, d)
-      quickSort(lista, e, q - 1)
-      quickSort(lista, q + 1, d)
-    end
-  end
-  IO.inspect(lista, label: "Lista ordenada por QuickSort")
 end
 lista = [5, 2, 4, 6, 1, 3, 7, 9, 8]
-OrdenacaoList.quickSort(lista, 0, length(lista) - 1)
+ordenada = OrdenarLista.quickSort(lista)
+IO.inspect(ordenada, label: "Lista ordenada por QuickSort")
