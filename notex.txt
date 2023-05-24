@@ -1,3 +1,0 @@
-DATA TYPES
-
-* boolean, byte, short

@@ -1,12 +1,16 @@
 list = [1, 2, 3, 4, 5]
-list2 = [6, 2, 8, 9, 10]
+list2 = [6, 7, 8, 9, 10]
 
 defmodule ElementoExiste do
   def isElementInList(list, element) do
-    if element in list do
-      IO.puts "Elemento #{element} existe na lista"
-   else
+    if list == [] do
       IO.puts "Elemento #{element} não existe na lista"
+    else if hd(list) == element do
+      IO.puts "Elemento #{element} existe na lista"
+      list
+    else
+      isElementInList(tl(list), element)
+      end
     end
   end
 end
@@ -38,15 +42,19 @@ SomaElementosLista.somaElementosLista(list, 0)
 
 
 defmodule ProdutoElementosLista do
-  def somaElementosLista(list, prod) do
-    if list == [] do
-      IO.puts "Produto dos elementos da lista: #{prod}"
+  def multiplicaElementosLista(list, prod, semElemento) do
+    if list == [] && semElemento == true do
+      0
+    else if list == [] && semElemento == false do
+      prod
     else
-      somaElementosLista(tl(list), prod * hd(list))
+      multiplicaElementosLista(tl(list), prod * hd(list), false)
+      end
     end
   end
 end
-ProdutoElementosLista.somaElementosLista(list, 1)
+produto = ProdutoElementosLista.multiplicaElementosLista(list, 1, true)
+IO.puts "Produto dos elementos da lista: #{produto}"
 
 
 defmodule ListaReversa do
@@ -66,10 +74,13 @@ ListaReversa.reverterLista(list, [])
 
 defmodule IsListsEqual do
   def isListsEqual(list1, list2) do
-    if list1 == list2 do
+    if list1 == [] && list2 == [] do
       IO.puts "Listas iguais"
+    else if hd(list1) == hd(list2) do
+      isListsEqual(tl(list1), tl(list2))
     else
       IO.puts "Listas diferentes"
+      end
     end
   end
 end
@@ -78,18 +89,42 @@ IsListsEqual.isListsEqual(list, list2)
 
 defmodule ConcatenarLists do
   def concatenateLists(list1, list2) do
-    IO.inspect(list1 ++ list2, label: "Lista concatenada")
+    if list2 == [] do
+      IO.inspect(list1, label: "Lista concatenada")
+    else
+      concatenateLists(list1 ++ [hd(list2)], tl(list2))
+    end
   end
 end
 ConcatenarLists.concatenateLists(list, list2)
 
 
 defmodule IntersecaoLists do
-  def intersectionLists(list1, list2) do
-    IO.inspect(list1 -- (list1 -- list2), label: "Lista interseção")
+  def contains(list1, element) do
+    if list1 == [] do
+      false
+    else if hd(list1) == element do
+      true
+    else
+      contains(tl(list1), element)
+      end
+    end
+  end
+
+  def intersectionLists(list1, list2, intersect) do
+    if list1 == [] do
+      intersect
+    else if contains(list2, hd(list1)) do
+      intersectionLists(tl(list1), list2, intersect ++ [hd(list1)])
+    else
+      intersectionLists(tl(list1), list2, intersect)
+      end
+    end
   end
 end
-IntersecaoLists.intersectionLists(list, list2)
+intersecao = IntersecaoLists.intersectionLists(list, list2, [])
+IO.inspect(intersecao, label: "Interseção das listas")
+
 
 defmodule OrdenarLista do
   def quickSort(lista) do
